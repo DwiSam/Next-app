@@ -1,38 +1,39 @@
-import Link from "next/link";
 import AnimeList from "@/components/AnimeList";
+import MangaList from "@/components/MangaList";
+import Header from "@/components/AnimeList/Header";
 
-const Home = async () => {
+const Page = async () => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/top/anime?limit=8`
   );
-  const anime = await response.json();
+  const topAnime = await response.json();
+
+  const response2 = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/top/manga?limit=8`
+  );
+  const topManga = await response2.json();
 
   return (
-    <div>
-      <div className="flex justify-between items-center p-4">
-        <h1 className="text-2xl font-bold">Populer</h1>
-        <Link
-          href="/"
-          className="md:text-xl text-md underline hover:text-indigo-500 transition-all"
-        >
-          Lihat Semua
-        </Link>
-      </div>
-      <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-4 px-4">
-        {anime.data.map((data) => {
-          return (
-            <div key={data.mal_id} className="shadow-xl">
-              <AnimeList
-                title={data.title}
-                images={data.images.webp.image_url}
-                id={data.mal_id}
-              />
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <>
+      <section>
+        <Header
+          title="Anime Populer"
+          linkHref="/populer"
+          linkTitle="Lihat Semua"
+        />
+        <AnimeList api={topAnime} />
+      </section>
+
+      <section>
+        <Header
+          title="Manga Populer"
+          linkHref="/populer"
+          linkTitle="Lihat Semua"
+        />
+        <MangaList api={topManga} />
+      </section>
+    </>
   );
 };
 
-export default Home;
+export default Page;
